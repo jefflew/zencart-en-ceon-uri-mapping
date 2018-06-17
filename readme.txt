@@ -2,13 +2,16 @@ CEON URI Mapping 4.5.5 for Zen Cart 1.5.5
 
 Changelog 4.5.5:
 2018-06-17
+webchills
+
 changed wrong code in YOURADMIN/includes/classes/class.CeonURIMappingInstallOrUpgrade.php
 see
 https://www.zen-cart.com/showthread.php?184548-Ceon-URI-Mapping-v4-x&p=1346786#post1346786
 
 Changelog 4.5.4:
 2018-05-31
-webchills (www.webchills.com)
+webchills
+
 removed unsuitable code sections in:
 YOURADMIN/ezpages.php
 YOURADMIN/includes/modules/product/collect_info.php
