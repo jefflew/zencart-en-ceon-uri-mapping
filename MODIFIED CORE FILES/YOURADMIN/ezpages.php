@@ -160,6 +160,7 @@ if (zen_not_null($action)) {
           $messageStack->add(SUCCESS_PAGE_INSERTED, 'success');
           zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' added.', 'info');
         } elseif ($action == 'update') {
+	
           zen_db_perform(TABLE_EZPAGES, $sql_data_array, 'update', "pages_id = " . (int)$pages_id);
           $pages_title_array = zen_db_prepare_input($_POST['pages_title']);
           $pages_html_text_array = zen_db_prepare_input($_POST['pages_html_text']);
@@ -175,14 +176,14 @@ if (zen_not_null($action)) {
           zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' updated.', 'info');
         }
           
-          // BEGIN CEON URI MAPPING 1 of 4
+       // BEGIN CEON URI MAPPING 1 of 4
           require_once(DIR_WS_CLASSES . 'class.CeonURIMappingAdminEZPagePages.php');
 		  
 		  $ceon_uri_mapping_admin = new CeonURIMappingAdminEZPagePages();
 		  
 		  $ceon_uri_mapping_admin->insertUpdateHandler($pages_id, $pages_title);
 		  
-          // END CEON URI MAPPING 1 of 4
+          // END CEON URI MAPPING 1 of 4   
 
         zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ezID=' . $pages_id));
       } else {
@@ -478,10 +479,15 @@ if (zen_not_null($action)) {
           <div class="col-sm-9 col-md-6">
           <?php echo zen_draw_input_field('alt_url_external', $ezInfo->alt_url_external, 'size="100" class="form-control"'); ?>
             <span class="help-block"><?php echo TEXT_ALT_URL_EXTERNAL_EXPLAIN; ?></span>
-          </div>
-<?php // BEGIN CEON URI MAPPING 4 of 4
+            
+          
+          
+           
+          <?php // BEGIN CEON URI MAPPING 4 of 4
     echo $ceon_uri_mapping_admin->buildEZPageURIMappingFields();
 // END CEON URI MAPPING 4 of 4 ?>
+    </div>
+
         </div>
         <div class="form-group">
           <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
