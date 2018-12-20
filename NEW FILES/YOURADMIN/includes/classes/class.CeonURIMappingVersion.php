@@ -6,11 +6,11 @@
  * @package     ceon_uri_mapping
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: class.CeonURIMappingVersion.php 2018-06-17 08:20:15Z webchills $
+ * @version     $Id: class.CeonURIMappingVersion.php 2018-12-20 08:54:15Z webchills $
  */
 
 /**
@@ -29,7 +29,7 @@ require_once(DIR_WS_CLASSES . 'class.CeonURIMappingTabbedPanelAdminInterface.php
  * @abstract
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -53,7 +53,7 @@ class CeonURIMappingVersion extends CeonURIMappingTabbedPanelAdminInterface
 		// Set up the basic version settings for this module
 		$this->_ceon_base_model_code = 'S-ZC-UM';
 		
-		$this->_version = '4.5.5';
+		$this->_version = '4.6.0';
 		
 		$this->_copyright_start_year = 2008;
 		

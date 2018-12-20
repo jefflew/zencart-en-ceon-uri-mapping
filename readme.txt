@@ -1,4 +1,14 @@
-CEON URI Mapping 4.5.5 for Zen Cart 1.5.5 
+CEON URI Mapping 4.6.0 for Zen Cart 1.5.6
+
+Changelog 4.6.0:
+2018-12-20
+webchills
+
+Changed files updated to reflect changes in Zen Cart 1.5.6 
+Code rewritten for PHP 7.3 and 7.2 compatibility
+
+This version is for Zen Cart 1.5.6 only!
+If you are using Zen Cart 1.5.5 use version 4.5.5!
 
 Changelog 4.5.5:
 2018-06-17
@@ -99,9 +109,9 @@ This creates 3 new database tables
 
 2)
 In the folder MODIFIED CORE FILES rename the folder YOURADMIN to the name of the admin directory.
-If you have just recently installed Zen Cart 1.5.5f and have not made any changes to the files yet, you can now upload all the files / folders from the MODIFIED CORE FILES folder in the default structure to your Zen Cart installation. 
+If you have just recently installed Zen Cart 1.5.6 and have not made any changes to the files yet, you can now upload all the files / folders from the MODIFIED CORE FILES folder in the default structure to your Zen Cart installation. 
 This will overwrite many files.
-If you've been using Zen Cart 1.5.5 for some time, and you've ever made changes to files or built-in other modules, then do not upload the files.
+If you've been using Zen Cart 1.5.6 for some time, and you've ever made changes to files or built-in other modules, then do not upload the files.
 Compare all the files in the MODIFIED CORE FILES folder with the corresponding files in your store and make the changes manually via WinMerge or BeyondCompare.
 Then you opload the changed files in the structure shown.
 

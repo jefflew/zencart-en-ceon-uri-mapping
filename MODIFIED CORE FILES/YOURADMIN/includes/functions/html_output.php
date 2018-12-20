@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php for CEON URI Mapping 2018-03-29 08:07:42Z webchills $
+ * @version $Id: html_output.php for CEON URI Mapping 2018-12-20 08:07:42Z webchills $
  */
 
 ////
@@ -242,8 +242,8 @@
 
 ////
 // Output a form filefield
-  function zen_draw_file_field($name, $required = false) {
-    $field = zen_draw_input_field($name, '', ' size="50" ', $required, 'file');
+  function zen_draw_file_field($name, $required = false, $parameters = '') {
+    $field = zen_draw_input_field($name, '', ' size="50" ' . $parameters, $required, 'file');
 
     return $field;
   }

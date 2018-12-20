@@ -1,129 +1,65 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: categories.php for CEON URI Mapping 2018-03-29 07:13:51Z webchills $
+ * @version $Id: categories.php for CEON URI Mapping 2018-12-20 07:53:51Z webchills $
  */
-  require('includes/application_top.php');
+require('includes/application_top.php');
+$languages = zen_get_languages();
+$parameters = array(
+  'categories_name' => '',
+  'categories_description' => '',
+  'categories_image' => '',
+  'sort_order' => ''
+);
+$cInfo = new objectInfo($parameters);
+$categoryId = (isset($_GET['cID']) ? $_GET['cID'] : '');
+if ($categoryId != '') {
+  $category = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
+                                   c.sort_order, c.date_added, c.last_modified
+                            FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                            WHERE c.categories_id = " . $categoryId . "
+                            AND c.categories_id = cd.categories_id
+                            AND cd.language_id = " . (int)$_SESSION['languages_id']);
+  $cInfo->updateObjectInfo($category->fields);
+}
+$action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  require(DIR_WS_MODULES . 'prod_cat_header_code.php');
+if (isset($_GET['page'])) {
+  $_GET['page'] = (int)$_GET['page'];
+}
+if (isset($_GET['product_type'])) {
+  $_GET['product_type'] = (int)$_GET['product_type'];
+}
+if (isset($_GET['cID'])) {
+  $_GET['cID'] = (int)$_GET['cID'];
+}
 
-  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+$zco_notifier->notify('NOTIFY_BEGIN_ADMIN_CATEGORIES', $action);
 
-  if (isset($_GET['page'])) $_GET['page'] = (int)$_GET['page'];
-  if (isset($_GET['product_type'])) $_GET['product_type'] = (int)$_GET['product_type'];
-  if (isset($_GET['cID'])) $_GET['cID'] = (int)$_GET['cID'];
-  $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_CATEGORIES', $action);
+if (zen_not_null($action)) {
+  switch ($action) {
 
-  if (!isset($_SESSION['categories_products_sort_order'])) {
-    $_SESSION['categories_products_sort_order'] = CATEGORIES_PRODUCTS_SORT_ORDER;
-  }
+    case 'remove_type':
+      if (isset($_POST['type_id'])) {
+        $sql = "DELETE FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                WHERE category_id = " . (int)zen_db_prepare_input($_GET['cID']) . "
+                AND product_type_id = " . (int)zen_db_prepare_input($_POST['type_id']);
 
-  if (!isset($_GET['reset_categories_products_sort_order'])) {
-    $reset_categories_products_sort_order = $_SESSION['categories_products_sort_order'];
-  }
-
-  if (zen_not_null($action)) {
-    switch ($action) {
-      case 'set_categories_products_sort_order':
-      $_SESSION['categories_products_sort_order'] = $_GET['reset_categories_products_sort_order'];
-      $action='';
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES,  'cPath=' . $_GET['cPath'] . ((isset($_GET['pID']) and !empty($_GET['pID'])) ? '&pID=' . $_GET['pID'] : '') . ((isset($_GET['page']) and !empty($_GET['page'])) ? '&page=' . $_GET['page'] : '')));
-      break;
-      case 'set_editor':
-      // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
-      $action='';
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES,  'cPath=' . $_GET['cPath'] . ((isset($_GET['pID']) and !empty($_GET['pID'])) ? '&pID=' . $_GET['pID'] : '') . ((isset($_GET['page']) and !empty($_GET['page'])) ? '&page=' . $_GET['page'] : '')));
-      break;
-
-      case 'update_category_status':
-      // disable category and products including subcategories
-      if (isset($_POST['categories_id'])) {
-        $categories_id = zen_db_prepare_input($_POST['categories_id']);
-
-        $categories = zen_get_category_tree($categories_id, '', '0', '', true);
-
-        for ($i=0, $n=sizeof($categories); $i<$n; $i++) {
-          $product_ids = $db->Execute("select products_id
-                                         from " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                         where categories_id = '" . (int)$categories[$i]['id'] . "'");
-
-          while (!$product_ids->EOF) {
-            $products[$product_ids->fields['products_id']]['categories'][] = $categories[$i]['id'];
-            $product_ids->MoveNext();
-          }
-        }
-
-        // change the status of categories and products
-        zen_set_time_limit(600);
-        for ($i=0, $n=sizeof($categories); $i<$n; $i++) {
-          if ($_POST['categories_status'] == '1') {
-            $categories_status = '0';
-            $products_status = '0';
-          } else {
-            $categories_status = '1';
-            $products_status = '1';
-          }
-
-          $sql = "update " . TABLE_CATEGORIES . " set categories_status='" . $categories_status . "'
-                  where categories_id='" . $categories[$i]['id'] . "'";
-          $db->Execute($sql);
-
-          // set products_status based on selection
-          if ($_POST['set_products_status'] == 'set_products_status_nochange') {
-            // do not change current product status
-          } else {
-            if ($_POST['set_products_status'] == 'set_products_status_on') {
-              $products_status = '1';
-            } else {
-              $products_status = '0';
-            }
-
-            $sql = "select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id='" . $categories[$i]['id'] . "'";
-            $category_products = $db->Execute($sql);
-
-            while (!$category_products->EOF) {
-              $sql = "update " . TABLE_PRODUCTS . " set products_status='" . $products_status . "' where products_id='" . $category_products->fields['products_id'] . "'";
-              $db->Execute($sql);
-              $category_products->MoveNext();
-            }
-          }
-        } // for
-
+        $db->Execute($sql);
+        zen_remove_restrict_sub_categories($_GET['cID'], (int)$_POST['type_id']);
+        $action = "edit";
+        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $_GET['cPath'] . '&cID=' . zen_db_prepare_input($_GET['cID'])));
       }
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
       break;
-
-      case 'remove_type':
-        if (isset($_POST['type_id']))
-        {
-          $sql = "delete from " .  TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                  where category_id = '" . (int)zen_db_prepare_input($_GET['cID']) . "'
-                 and product_type_id = '" . (int)zen_db_prepare_input($_POST['type_id']) . "'";
-
-          $db->Execute($sql);
-          zen_remove_restrict_sub_categories($_GET['cID'], (int)$_POST['type_id']);
-          $action = "edit";
-          zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $_GET['cPath'] . '&cID=' . zen_db_prepare_input($_GET['cID'])));
-        }
-      break;
-      case 'setflag':
-
-      if ( isset($_POST['flag']) && ($_POST['flag'] == '0') || ($_POST['flag'] == '1') ) {
-        if (isset($_GET['pID'])) {
-          zen_set_product_status($_GET['pID'], $_POST['flag']);
-        }
-      }
-
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
-      break;
-      case 'insert_category':
-      case 'update_category':
-      if ( isset($_POST['add_type']) or isset($_POST['add_type_all']) ) {
+    case 'insert_category':
+    case 'update_category':
+      if (isset($_POST['add_type']) || isset($_POST['add_type_all'])) {
         // check if it is already restricted
-        $sql = "select * from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+        $sql = "select *
+                from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
                 where category_id = '" . (int)zen_db_prepare_input($_POST['categories_id']) . "'
                 and product_type_id = '" . (int)zen_db_prepare_input($_POST['restrict_type']) . "'";
 
@@ -131,16 +67,17 @@
         if ($type_to_cat->RecordCount() < 1) {
           //@@TODO find all sub-categories and restrict them as well.
 
-          $insert_sql_data = array('category_id' => zen_db_prepare_input($_POST['categories_id']),
-                                   'product_type_id' => zen_db_prepare_input($_POST['restrict_type']));
+          $insert_sql_data = array(
+            'category_id' => zen_db_prepare_input($_POST['categories_id']),
+            'product_type_id' => zen_db_prepare_input($_POST['restrict_type']));
 
           zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $insert_sql_data);
           /*
-          // moved below so evaluated separately from current category
-          if (isset($_POST['add_type_all'])) {
-          zen_restrict_sub_categories($_POST['categories_id'], $_POST['restrict_type']);
-          }
-          */
+            // moved below so evaluated separately from current category
+            if (isset($_POST['add_type_all'])) {
+            zen_restrict_sub_categories($_POST['categories_id'], $_POST['restrict_type']);
+            }
+           */
         }
         // add product type restrictions to subcategories if not already set
         if (isset($_POST['add_type_all'])) {
@@ -149,14 +86,17 @@
         $action = "edit";
         zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $cPath . '&cID=' . zen_db_prepare_input($_POST['categories_id'])));
       }
-      if (isset($_POST['categories_id'])) $categories_id = zen_db_prepare_input($_POST['categories_id']);
+      if (isset($_POST['categories_id'])) {
+        $categories_id = zen_db_prepare_input($_POST['categories_id']);
+      }
       $sort_order = zen_db_prepare_input($_POST['sort_order']);
 
       $sql_data_array = array('sort_order' => (int)$sort_order);
 
       if ($action == 'insert_category') {
-        $insert_sql_data = array('parent_id' => (int)$current_category_id,
-                                 'date_added' => 'now()');
+        $insert_sql_data = array(
+          'parent_id' => (int)$current_category_id,
+          'date_added' => 'now()');
 
         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
@@ -164,18 +104,21 @@
 
         $categories_id = zen_db_insert_id();
         // check if [arent is restricted
-        $sql = "select parent_id from " . TABLE_CATEGORIES . "
+        $sql = "select parent_id
+                from " . TABLE_CATEGORIES . "
                 where categories_id = '" . (int)$categories_id . "'";
 
         $parent_cat = $db->Execute($sql);
         if ($parent_cat->fields['parent_id'] != '0') {
-          $sql = "select * from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                  where category_id = '" . $parent_cat->fields['parent_id'] . "'";
+          $sql = "SELECT *
+                  FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                  WHERE category_id = '" . $parent_cat->fields['parent_id'] . "'";
           $has_type = $db->Execute($sql);
-          if ($has_type->RecordCount() > 0 ) {
+          if ($has_type->RecordCount() > 0) {
             while (!$has_type->EOF) {
-              $insert_sql_data = array('category_id' => (int)$categories_id,
-                                       'product_type_id' => (int)$has_type->fields['product_type_id']);
+              $insert_sql_data = array(
+                'category_id' => (int)$categories_id,
+                'product_type_id' => (int)$has_type->fields['product_type_id']);
               zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $insert_sql_data);
               $has_type->moveNext();
             }
@@ -189,19 +132,20 @@
         zen_db_perform(TABLE_CATEGORIES, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "'");
       }
 
-      $languages = zen_get_languages();
-      for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $categories_name_array = $_POST['categories_name'];
         $categories_description_array = $_POST['categories_description'];
         $language_id = $languages[$i]['id'];
 
         // clean $categories_description when blank or just <p /> left behind
-        $sql_data_array = array('categories_name' => zen_db_prepare_input($categories_name_array[$language_id]),
-                                'categories_description' => ($categories_description_array[$language_id] == '<p />' ? '' : zen_db_prepare_input($categories_description_array[$language_id])));
+        $sql_data_array = array(
+          'categories_name' => zen_db_prepare_input($categories_name_array[$language_id]),
+          'categories_description' => ($categories_description_array[$language_id] == '<p />' ? '' : zen_db_prepare_input($categories_description_array[$language_id])));
 
         if ($action == 'insert_category') {
-          $insert_sql_data = array('categories_id' => (int)$categories_id,
-                                   'language_id' => (int)$languages[$i]['id']);
+          $insert_sql_data = array(
+            'categories_id' => (int)$categories_id,
+            'language_id' => (int)$languages[$i]['id']);
 
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
@@ -219,15 +163,16 @@
                       where categories_id = '" . (int)$categories_id . "'");
       } else {
         if ($categories_image = new upload('categories_image')) {
-          $categories_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
+          $categories_image->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg'));
           $categories_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
           if ($categories_image->parse() && $categories_image->save()) {
             $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
           }
           if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != 1) {
             // save filename when not set to none and not blank
+            $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
             $db->Execute("update " . TABLE_CATEGORIES . "
-                          set categories_image = '" . $categories_image_name . "'
+                          set categories_image = '" . $db_filename . "'
                           where categories_id = '" . (int)$categories_id . "'");
           } else {
             // remove filename when set to none and not blank
@@ -249,21 +194,20 @@
       
       // END CEON URI MAPPING 1 of 3
 
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
+      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $categories_id . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
       break;
 
-      // bof: categories meta tags
-      case 'update_category_meta_tags':
+    // bof: categories meta tags
+    case 'update_category_meta_tags':
       // add or update meta tags
       //die('I SEE ' . $action . ' - ' . $_POST['categories_id']);
       $categories_id = $_POST['categories_id'];
-      $languages = zen_get_languages();
-      for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
-        $check = $db->Execute("select *
-                               from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . "
-                               where categories_id = '" . (int)$categories_id . "'
-                               and language_id = '" . (int)$language_id . "'");
+        $check = $db->Execute("SELECT *
+                               FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . "
+                               WHERE categories_id = " . (int)$categories_id . "
+                               AND language_id = " . (int)$language_id);
         if ($check->RecordCount() > 0) {
           $action = 'update_category_meta_tags';
         } else {
@@ -273,289 +217,49 @@
           $action = 'delete_category_meta_tags';
         }
 
-        $sql_data_array = array('metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
-                                'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
-                                'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
+        $sql_data_array = array(
+          'metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
+          'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
+          'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
 
         if ($action == 'insert_categories_meta_tags') {
-          $insert_sql_data = array('categories_id' => (int)$categories_id,
-                                   'language_id' => (int)$language_id);
+          $insert_sql_data = array(
+            'categories_id' => (int)$categories_id,
+            'language_id' => (int)$language_id);
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
           zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array);
         } elseif ($action == 'update_category_meta_tags') {
-          zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$language_id . "'");
+          zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = " . (int)$categories_id . " and language_id = " . (int)$language_id);
         } elseif ($action == 'delete_category_meta_tags') {
-          $remove_categories_metatag = "DELETE from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$language_id . "'";
+          $remove_categories_metatag = "DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE categories_id = " . (int)$categories_id . " AND language_id = " . (int)$language_id;
           $db->Execute($remove_categories_metatag);
         }
       }
 
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
+      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $categories_id));
       break;
-      // eof: categories meta tags
+    // eof: categories meta tags
 
-      case 'delete_category_confirm_old':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action']= '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
-      }
-      if (isset($_POST['categories_id'])) {
-        $categories_id = zen_db_prepare_input($_POST['categories_id']);
-
-        $categories = zen_get_category_tree($categories_id, '', '0', '', true);
-        $products = array();
-        $products_delete = array();
-
-        for ($i=0, $n=sizeof($categories); $i<$n; $i++) {
-          $product_ids = $db->Execute("select products_id
-                                           from " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                           where categories_id = '" . (int)$categories[$i]['id'] . "'");
-
-          while (!$product_ids->EOF) {
-            $products[$product_ids->fields['products_id']]['categories'][] = $categories[$i]['id'];
-            $product_ids->MoveNext();
-          }
-        }
-
-        reset($products);
-        while (list($key, $value) = each($products)) {
-          $category_ids = '';
-
-          for ($i=0, $n=sizeof($value['categories']); $i<$n; $i++) {
-            $category_ids .= "'" . (int)$value['categories'][$i] . "', ";
-          }
-          $category_ids = substr($category_ids, 0, -2);
-
-          $check = $db->Execute("select count(*) as total
-                                           from " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                           where products_id = '" . (int)$key . "'
-                                           and categories_id not in (" . $category_ids . ")");
-          if ($check->fields['total'] < '1') {
-            $products_delete[$key] = $key;
-          }
-        }
-
-        // removing categories can be a lengthy process
-        zen_set_time_limit(600);
-        for ($i=0, $n=sizeof($categories); $i<$n; $i++) {
-          zen_remove_category($categories[$i]['id']);
-        }
-
-        reset($products_delete);
-        while (list($key) = each($products_delete)) {
-          zen_remove_product($key);
-        }
-      }
-
-
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
+    case 'new_category':
+    case 'edit_category':
+    case 'edit_category_meta_tags':
+      // handled by another switch/case later
       break;
 
-      //////////////////////////////////
-      // delete new
-
-      case 'delete_category_confirm':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action']= '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
-      }
-
-      // future cat specific deletion
-      $delete_linked = 'true';
-      if ($_POST['delete_linked'] == 'delete_linked_no') {
-        $delete_linked = 'false';
-      } else {
-        $delete_linked = 'true';
-      }
-
-      // delete category and products
-      if (isset($_POST['categories_id']) && $_POST['categories_id'] != '' && is_numeric($_POST['categories_id']) && $_POST['categories_id'] != 0) {
-        $categories_id = zen_db_prepare_input($_POST['categories_id']);
-
-        // create list of any subcategories in the selected category,
-        $categories = zen_get_category_tree($categories_id, '', '0', '', true);
-
-        zen_set_time_limit(600);
-
-        // loop through this cat and subcats for delete-processing.
-        for ($i=0, $n=sizeof($categories); $i<$n; $i++) {
-          $sql = "select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id='" . $categories[$i]['id'] . "'";
-          $category_products = $db->Execute($sql);
-
-          while (!$category_products->EOF) {
-            $cascaded_prod_id_for_delete = $category_products->fields['products_id'];
-            $cascaded_prod_cat_for_delete = array();
-            $cascaded_prod_cat_for_delete[] = $categories[$i]['id'];
-            //echo 'processing product_id: ' . $cascaded_prod_id_for_delete . ' in category: ' . $cascaded_prod_cat_for_delete . '<br>';
-
-            // determine product-type-specific override script for this product
-            $product_type = zen_get_products_type($category_products->fields['products_id']);
-            // now loop thru the delete_product_confirm script for each product in the current category
-            if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php')) {
-              require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php');
-            } else {
-              require(DIR_WS_MODULES . 'delete_product_confirm.php');
-            }
-
-            // THIS LINE COMMENTED BECAUSE IT'S DONE ALREADY DURING DELETE_PRODUCT_CONFIRM.PHP:
-            //zen_remove_product($category_products->fields['products_id'], $delete_linked);
-            $category_products->MoveNext();
-          }
-
-          zen_remove_category($categories[$i]['id']);
-
-        } // end for loop
-      }
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
-      break;
-
-      // eof delete new
-      /////////////////////////////////
-      // @@TODO where is delete_product_confirm
-
-      case 'move_category_confirm':
-      if (isset($_POST['categories_id']) && ($_POST['categories_id'] != $_POST['move_to_category_id'])) {
-        $categories_id = zen_db_prepare_input($_POST['categories_id']);
-        $new_parent_id = zen_db_prepare_input($_POST['move_to_category_id']);
-
-        $path = explode('_', zen_get_generated_category_path_ids($new_parent_id));
-
-        if (in_array($categories_id, $path)) {
-          $messageStack->add_session(ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT, 'error');
-
-          zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
-        } else {
-
-          $sql = "select count(*) as count from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id='" . (int)$new_parent_id . "'";
-          $zc_count_products = $db->Execute($sql);
-
-          if ( $zc_count_products->fields['count'] > 0) {
-            $messageStack->add_session(ERROR_CATEGORY_HAS_PRODUCTS, 'error');
-          } else {
-            $messageStack->add_session(SUCCESS_CATEGORY_MOVED, 'success');
-          }
-
-          $db->Execute("update " . TABLE_CATEGORIES . "
-                            set parent_id = '" . (int)$new_parent_id . "', last_modified = now()
-                            where categories_id = '" . (int)$categories_id . "'");
-
-          // fix here - if this is a category with subcats it needs to know to loop through
-          // reset all products_price_sorter for moved category products
-          $reset_price_sorter = $db->Execute("select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id='" . (int)$categories_id . "'");
-          while (!$reset_price_sorter->EOF) {
-            zen_update_products_price_sorter($reset_price_sorter->fields['products_id']);
-            $reset_price_sorter->MoveNext();
-          }
-
-          zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id));
-        }
-      } else {
-        $messageStack->add_session(ERROR_CANNOT_MOVE_CATEGORY_TO_CATEGORY_SELF . $cPath, 'error');
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
-      }
-
-      break;
-      // @@TODO where is move_product_confirm
-      // @@TODO where is insert_product
-      // @@TODO where is update_product
-
-      // attribute features
-      case 'delete_attributes':
-      zen_delete_products_attributes($_GET['products_id']);
-      $messageStack->add_session(SUCCESS_ATTRIBUTES_DELETED . ' ID#' . $_GET['products_id'], 'success');
-      $action='';
-
-      // reset products_price_sorter for searches etc.
-      zen_update_products_price_sorter($_GET['products_id']);
-
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $_GET['products_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
-      break;
-
-      case 'update_attributes_sort_order':
-      zen_update_attributes_products_option_values_sort_order($_GET['products_id']);
-      $messageStack->add_session(SUCCESS_ATTRIBUTES_UPDATE . ' ID#' . $_GET['products_id'], 'success');
-      $action='';
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $_GET['products_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
-      break;
-
-      // attributes copy to product
-      case 'update_attributes_copy_to_product':
-      $copy_attributes_delete_first = ($_POST['copy_attributes'] == 'copy_attributes_delete' ? '1' : '0');
-      $copy_attributes_duplicates_skipped = ($_POST['copy_attributes'] == 'copy_attributes_ignore' ? '1' : '0');
-      $copy_attributes_duplicates_overwrite = ($_POST['copy_attributes'] == 'copy_attributes_update' ? '1' : '0');
-      zen_copy_products_attributes($_POST['products_id'], $_POST['products_update_id']);
-      //      die('I would copy Product ID#' . $_POST['products_id'] . ' to a Product ID#' . $_POST['products_update_id'] . ' - Existing attributes ' . $_POST['copy_attributes']);
-      $_GET['action']= '';
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $_GET['products_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
-      break;
-
-      // attributes copy to category
-      case 'update_attributes_copy_to_category':
-      $copy_attributes_delete_first = ($_POST['copy_attributes'] == 'copy_attributes_delete' ? '1' : '0');
-      $copy_attributes_duplicates_skipped = ($_POST['copy_attributes'] == 'copy_attributes_ignore' ? '1' : '0');
-      $copy_attributes_duplicates_overwrite = ($_POST['copy_attributes'] == 'copy_attributes_update' ? '1' : '0');
-      $copy_to_category = $db->Execute("select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id='" . (int)$_POST['categories_update_id'] . "'");
-      while (!$copy_to_category->EOF) {
-        zen_copy_products_attributes($_POST['products_id'], $copy_to_category->fields['products_id']);
-        $copy_to_category->MoveNext();
-      }
-      //      die('CATEGORIES - I would copy Product ID#' . $_POST['products_id'] . ' to a Category ID#' . $_POST['categories_update_id']  . ' - Existing attributes ' . $_POST['copy_attributes'] . ' Total Products ' . $copy_to_category->RecordCount());
-
-      $_GET['action']= '';
-      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $_GET['products_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
-      break;
-      case 'new_product':
-      if (isset($_GET['product_type'])) {
-        // see if this category is restricted
-        $pieces = explode('_',$_GET['cPath']);
-        $cat_id = $pieces[sizeof($pieces)-1];
-        //	echo $cat_id;
-        $sql = "select product_type_id from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " where category_id = '" . (int)$cat_id . "'";
-        $product_type_list = $db->Execute($sql);
-        $sql = "select product_type_id from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " where category_id = '" . (int)$cat_id . "' and product_type_id = '" . (int)$_GET['product_type'] . "'";
-        $product_type_good = $db->Execute($sql);
-        if ($product_type_list->RecordCount() < 1 || $product_type_good->RecordCount() > 0) {
-          $url = zen_get_all_get_params();
-          $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$_GET['product_type'] . "'";
-          $handler = $db->Execute($sql);
-          zen_redirect(zen_href_link($handler->fields['type_handler'] . '.php', zen_get_all_get_params()));
-        } else {
-          $messageStack->add(ERROR_CANNOT_ADD_PRODUCT_TYPE, 'error');
-        }
-      }
-      break;
-
-      case 'setflag_categories':
-      case 'new_category':
-      case 'edit_category':
-      case 'delete_category':
-      case 'edit_category_meta_tags':
-      case 'move_category':
-      case 'delete_product':
-      case 'move_product':
-      case 'copy_to':
-      case 'attribute_features':
-      case 'attribute_features_copy_to_product':
-      case 'attribute_features_copy_to_category':
-        // handled by another switch/case later
-        break;
-
-      default:
-        $action = $_GET['action'] = '';
-    }
+    default:
+      $action = $_GET['action'] = '';
   }
+}
 
-  // check if the catalog image directory exists
-  if (is_dir(DIR_FS_CATALOG_IMAGES)) {
-    if (!is_writeable(DIR_FS_CATALOG_IMAGES)) $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE, 'error');
-  } else {
-    $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
+// check if the catalog image directory exists
+if (is_dir(DIR_FS_CATALOG_IMAGES)) {
+  if (!is_writeable(DIR_FS_CATALOG_IMAGES)) {
+    $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE, 'error');
   }
+} else {
+  $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
+}
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
