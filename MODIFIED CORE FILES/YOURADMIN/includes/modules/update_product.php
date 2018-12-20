@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: update_product.php for CEON URI Mapping 2018-12-20 08:09:16Z webchills $
+ * @version $Id: update_product.php for CEON URI Mapping 2018-12-20 11:32:16Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -116,6 +116,14 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
     }
   }
 
+    // BEGIN CEON URI MAPPING 1 of 1
+    require_once(DIR_WS_CLASSES . 'class.CeonURIMappingAdminProductPages.php');
+    
+    $ceon_uri_mapping_admin = new CeonURIMappingAdminProductPages();
+    
+    $ceon_uri_mapping_admin->updateProductHandler($products_id, $zc_products->get_handler($product_type));
+    
+    // END CEON URI MAPPING 1 of 1
   zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')));
 } else {
   $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');

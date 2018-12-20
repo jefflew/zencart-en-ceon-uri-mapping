@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: preview_info.php for CEON URI Mapping 2018-12-20 10:29:16Z webchills $
+ * @version $Id: preview_info.php for CEON URI Mapping 2018-12-20 11:29:16Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,6 +15,14 @@ if (zen_not_null($_POST)) {
   $products_name = $_POST['products_name'];
   $products_description = $_POST['products_description'];
   $products_url = $_POST['products_url'];
+// BEGIN CEON URI MAPPING 1 of 4
+require_once(DIR_WS_CLASSES . 'class.CeonURIMappingAdminProductPages.php');
+      
+$ceon_uri_mapping_admin = new CeonURIMappingAdminProductPages();
+      
+$ceon_uri_mapping_admin->productPreviewProcessSubmission($current_category_id);
+      
+// END CEON URI MAPPING 1 of 4
 } else {
   $product = $db->Execute("SELECT p.products_id, pd.language_id, pd.products_name,
                                   pd.products_description, pd.products_url, p.products_quantity,

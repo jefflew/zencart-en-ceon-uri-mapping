@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: preview_info.php for CEON URI Mapping 2018-12-20 10:49:16Z webchills $
+ * @version $Id: preview_info.php for CEON URI Mapping 2018-12-20 11:30:16Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,6 +15,14 @@ if (zen_not_null($_POST)) {
   $products_name = $_POST['products_name'];
   $products_description = $_POST['products_description'];
   $products_url = $_POST['products_url'];
+// BEGIN CEON URI MAPPING 1 of 4
+require_once(DIR_WS_CLASSES . 'class.CeonURIMappingAdminProductPages.php');
+      
+$ceon_uri_mapping_admin = new CeonURIMappingAdminProductPages();
+      
+$ceon_uri_mapping_admin->productPreviewProcessSubmission($current_category_id);
+      
+// END CEON URI MAPPING 1 of 4
 } else {
   $product = $db->Execute("SELECT p.products_id, pd.language_id, pd.products_name,
                                   pd.products_description, pd.products_url, p.products_quantity,
@@ -92,6 +100,10 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         }
         ?>
     </div>
+    <?php // BEGIN CEON URI MAPPING 3 of 4
+      $ceon_uri_mapping_admin->productPreviewOutputURIMappingInfo($languages[$i]);
+      // END CEON URI MAPPING 3 of 4 ?>
+
     <?php
     if ($pInfo->products_url) {
       ?>
@@ -153,6 +165,9 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         }
         echo zen_draw_hidden_field('products_image', stripslashes($products_image_name));
         echo ( (isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
+// BEGIN CEON URI MAPPING 4 of 4
+      echo $ceon_uri_mapping_admin->productPreviewBuildHiddenFields();
+// END CEON URI MAPPING 4 of 4
         echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="edit"') . '&nbsp;&nbsp;';
         if (isset($_GET['pID'])) {
           ?>

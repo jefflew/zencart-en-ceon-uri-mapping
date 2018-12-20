@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ezpages.php for CEON URI Mapping 2018-20-12 07:40:51Z webchills $
+ * @version $Id: ezpages.php for CEON URI Mapping 2018-20-12 11:14:51Z webchills $
  */
 require('includes/application_top.php');
 
@@ -479,6 +479,9 @@ if (zen_not_null($action)) {
           <?php echo zen_draw_input_field('alt_url_external', $ezInfo->alt_url_external, 'size="100" class="form-control"'); ?>
             <span class="help-block"><?php echo TEXT_ALT_URL_EXTERNAL_EXPLAIN; ?></span>
           </div>
+<?php // BEGIN CEON URI MAPPING 4 of 4
+    echo $ceon_uri_mapping_admin->buildEZPageURIMappingFields();
+// END CEON URI MAPPING 4 of 4 ?>
         </div>
         <div class="form-group">
           <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
