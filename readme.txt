@@ -1,3 +1,10 @@
+This is a development version, currently not fully useable yet. Work in progress. Expected release in january.
+
+Known issues:
+Category page not yet modified, so CEON URI mapping field won't show when editing or creating a category
+
+For any other issues you may find please create issues
+
 CEON URI Mapping 4.6.0 for Zen Cart 1.5.6
 
 Changelog 4.6.0:
@@ -5,7 +12,7 @@ Changelog 4.6.0:
 webchills
 
 Changed files updated to reflect changes in Zen Cart 1.5.6 
-Code rewritten for PHP 7.3 and 7.2 compatibility
+Code changes for PHP 7.3 and 7.2 compatibility
 
 This version is for Zen Cart 1.5.6 only!
 If you are using Zen Cart 1.5.5 use version 4.5.5!
