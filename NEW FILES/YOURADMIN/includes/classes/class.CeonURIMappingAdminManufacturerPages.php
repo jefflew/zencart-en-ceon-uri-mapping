@@ -8,11 +8,11 @@
  * @package     ceon_uri_mapping
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: class.CeonURIMappingAdminManufacturerPages.php 2018-04-06 09:45:15Z webchills $
+ * @version     $Id: class.CeonURIMappingAdminManufacturerPages.php 2018-12-23 09:27:15Z webchills $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -33,7 +33,7 @@ require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.CeonURIMappingAdminManufac
  * @package     ceon_uri_mapping
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -329,17 +329,16 @@ class CeonURIMappingAdminManufacturerPages extends CeonURIMappingAdminManufactur
 		
 		$num_languages = count($languages);
 		
-		$uri_mapping_input_fields = zen_draw_separator('pixel_black.gif', '100%', '2');
+		//$uri_mapping_input_fields = zen_draw_separator('pixel_black.gif', '100%', '2');
 		
-		$uri_mapping_input_fields .= '<table border="0" cellspacing="0" cellpadding="0">' . "\n\t";
-		$uri_mapping_input_fields .= '<tr>' . "\n\t\t" .
-			'<td rowspan="2" class="main" valign="top" style="width: 10em; padding-top: 0.5em;">';
+		$uri_mapping_input_fields .= '<br/>';
+	
 		
-		$uri_mapping_input_fields .= CEON_URI_MAPPING_TEXT_MANUFACTURER_URI . '</td>' . "\n\t\t" .
-			'<td class="main" style="padding-top: 0.5em; padding-bottom: 0;">' . "\n";
+		$uri_mapping_input_fields .= CEON_URI_MAPPING_TEXT_MANUFACTURER_URI . '<br/>' .
+			'' . "\n";
 		
 		for ($i = 0, $n = count($languages); $i < $n; $i++) {
-			$uri_mapping_input_fields .= "<p>";
+			$uri_mapping_input_fields .= "";
 			
 			if (!isset($prev_uri_mappings[$languages[$i]['id']])) {
 				$prev_uri_mappings[$languages[$i]['id']] = '';
@@ -351,15 +350,14 @@ class CeonURIMappingAdminManufacturerPages extends CeonURIMappingAdminManufactur
 			$uri_mapping_input_fields .= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] .
 				'/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' .
 				zen_draw_input_field('uri-mappings[' . $languages[$i]['id'] . ']',
-				$prev_uri_mappings[$languages[$i]['id']], 'size="60"');
+				$prev_uri_mappings[$languages[$i]['id']], 'size="60" class="form-control"');
 			
-			$uri_mapping_input_fields .= "</p>\n";
+			$uri_mapping_input_fields .= "";
 		}
 		
-		$uri_mapping_input_fields .= '</td>' . "\n\t</tr>\n\t<tr>\n\t\t" .
-			'<td class="main" style="padding-top: 1em; padding-bottom: 0.5em;">' . "\n";
 		
-		$uri_mapping_input_fields .= "<p>";
+		
+		$uri_mapping_input_fields .= "";
 		
 		if ($this->_autogenEnabled()) {
 			if ($num_languages == 1) {
@@ -388,11 +386,9 @@ class CeonURIMappingAdminManufacturerPages extends CeonURIMappingAdminManufactur
 			$uri_mapping_input_fields .= CEON_URI_MAPPING_TEXT_URI_AUTOGEN_DISABLED;
 		}
 		
-		$uri_mapping_input_fields .= "</p>";
+		$uri_mapping_input_fields .= "";
 		
-		$uri_mapping_input_fields .= "\n\t\t</td>\n\t</tr>\n</table>\n";
 		
-		$uri_mapping_input_fields .= zen_draw_separator('pixel_black.gif', '100%', '2');
 		
 		return $uri_mapping_input_fields;
 	}

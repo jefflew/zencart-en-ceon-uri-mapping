@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: collect_info.php for CEON URI Mapping 2018-12-20 11:18:50Z webchills $
+ * @version $Id: collect_info.php for CEON URI Mapping 2018-12-23 09:18:50Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -316,10 +316,11 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
       <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
       <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control"'); ?>
-    </div>
+   
     <?php // BEGIN CEON URI MAPPING 2 of 2
   echo $ceon_uri_mapping_admin->collectInfoBuildURIMappingFields();
 // END CEON URI MAPPING 2 of 2 ?>
+ </div>
     <?php
     echo zen_draw_hidden_field('products_date_added', (zen_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
     echo ((isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '');

@@ -10,7 +10,7 @@
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: class.CeonURIMappingInstallationCheck.php 2018-12-20 15:45:15Z webchills $
+ * @version     $Id: class.CeonURIMappingInstallationCheck.php 2018-12-21 08:45:15Z webchills $
  */
 
 /**
@@ -923,43 +923,9 @@ class CeonURIMappingInstallationCheck extends CeonURIMappingVersion
 				)
 			);
 		
-		$core_file_modifications[] = array(
-			'path' => 'document_general.php',
-			'num_mods' => 3,
-			'new_snippets' => array(
-				array(
-					'|1 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();'
-					),
-				array(
-					'|2 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray('
-					),
-				array(
-					'require_once(DIR_WS_CLASSES . \'class.CeonURIMappingAdminProductPages.php\');',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToProductCopyFieldsArray((int) $_G'
-					)
-				)
-			);
 		
-		$core_file_modifications[] = array(
-			'path' => 'document_product.php',
-			'num_mods' => 3,
-			'new_snippets' => array(
-				array(
-					'|1 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();'
-					),
-				array(
-					'|2 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray('
-					),
-				array(
-					'require_once(DIR_WS_CLASSES . \'class.CeonURIMappingAdminProductPages.php\');',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToProductCopyFieldsArray((int) $_G'
-					)
-				)
-			);
+		
+		
 		
 		$core_file_modifications[] = array(
 			'path' => 'ezpages.php',
@@ -1018,67 +984,7 @@ class CeonURIMappingInstallationCheck extends CeonURIMappingVersion
 				)
 			);
 		
-		$core_file_modifications[] = array(
-			'path' => 'product.php',
-			'num_mods' => 3,
-			'new_snippets' => array(
-				array(
-					'|1 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();'
-					),
-				array(
-					'|2 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray('
-					),
-				array(
-					'require_once(DIR_WS_CLASSES . \'class.CeonURIMappingAdminProductPages.php\');',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToProductCopyFieldsArray((int) $_G'
-					)
-				),
-			'old_snippets' => array(
-				'// New category doesn\'t have any previous URI mappings',
-				'$prev_uri_mappings_sql = "',
-				'$uri_mapping_input_fields = ceon_uri_mapping_build_product_copy_uri_fields('
-				)
-			);
 		
-		$core_file_modifications[] = array(
-			'path' => 'product_music.php',
-			'num_mods' => 3,
-			'new_snippets' => array(
-				array(
-					'|1 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();'
-					),
-				array(
-					'|2 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray('
-					),
-				array(
-					'require_once(DIR_WS_CLASSES . \'class.CeonURIMappingAdminProductPages.php\');',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToProductCopyFieldsArray((int) $_G'
-					)
-				)
-			);
-		
-		$core_file_modifications[] = array(
-			'path' => 'product_free_shipping.php',
-			'num_mods' => 3,
-			'new_snippets' => array(
-				array(
-					'|1 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();'
-					),
-				array(
-					'|2 of 3[\s]+require_once\(DIR_WS_CLASSES \. \'class\.CeonURIMappingAdminCate|',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray('
-					),
-				array(
-					'require_once(DIR_WS_CLASSES . \'class.CeonURIMappingAdminProductPages.php\');',
-					'$ceon_uri_mapping_admin->addURIMappingFieldsToProductCopyFieldsArray((int) $_G'
-					)
-				)
-			);
 		
 		$core_file_modifications[] = array(
 			'path' => DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'html_output.php',
@@ -1139,40 +1045,7 @@ class CeonURIMappingInstallationCheck extends CeonURIMappingVersion
 					)
 				)
 			);
-		
-		// Next two checks are for specific Zen Cart versions
-		$zen_cart_minor_version = (float) substr(PROJECT_VERSION_MINOR, 0, 3);
-		
-		// Sessions used root until 1.3.9
-		if (PROJECT_VERSION_MAJOR == '1' && $zen_cart_minor_version >= 3.9) {
-			$core_file_modifications[] = array(
-				'path' => DIR_FS_CATALOG . DIR_WS_INCLUDES .
-					'init_includes/overrides/init_sessions.php',
-				'num_mods' => 1,
-				'file_required' => true,
-				'new_snippets' => array(
-					array(
-						'|for the root[\s]+\$path = \'/\';|'
-						)
-					)
-				);
-		}
-		
-		// html_header.php is only modified for really old Zen Cart versions
-		if (PROJECT_VERSION_MAJOR == '1' && $zen_cart_minor_version < 3.9) {
-			global $template_dir;
 			
-			$core_file_modifications[] = array(
-				'path' => DIR_FS_CATALOG_TEMPLATES . $template_dir . '/common/html_header.php',
-				'file_required' => true,
-				'num_mods' => 1,
-				'new_snippets' => array(
-					array(
-						'if (isset($canonicalLink) && $canonicalLink !='
-						)
-					)
-				);
-		}
 		
 		// Now that the list of core file modifications info has been built, analyse the store's files to see if
 		// there are any missing/wrong
