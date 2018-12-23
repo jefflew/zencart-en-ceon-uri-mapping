@@ -8,11 +8,10 @@ For any other issues you may find please create issues
 CEON URI Mapping 4.6.0 for Zen Cart 1.5.6
 
 Changelog 4.6.0:
-2018-12-20
+December 2018
 webchills
 
-Changed files updated to reflect changes in Zen Cart 1.5.6 
-Code changes for PHP 7.3 and 7.2 compatibility
+Files updated to reflect changes in Zen Cart 1.5.6 
 
 This version is for Zen Cart 1.5.6 only!
 If you are using Zen Cart 1.5.5 use version 4.5.5!
