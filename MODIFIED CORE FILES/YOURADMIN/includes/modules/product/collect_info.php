@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: collect_info.php for CEON URI Mapping 2018-03-29 08:24:50Z webchills $
+ * @version $Id: collect_info.php for CEON URI Mapping 2018-12-23 16:24:50Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -321,16 +321,7 @@ echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorte
     }
 ?>
 
-<?php
-    for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-?>
-          <tr>
-            <td class="main"><?php if ($i == 0) echo TEXT_PRODUCTS_MERKMALE; ?></td>
-            <td class="main"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_draw_input_field('products_merkmale[' . $languages[$i]['id'] . ']', (isset($products_merkmale[$languages[$i]['id']]) ? htmlspecialchars(stripslashes($products_merkmale[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE) : htmlspecialchars(zen_get_products_merkmale($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE)), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_merkmale')); ?></td>
-          </tr>
-<?php
-    }
-?>
+
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
