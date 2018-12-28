@@ -6,11 +6,11 @@
  * @package     ceon_uri_mapping
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: ceon_uri_mapping_config.php 2018-03-29 08:31:10Z webchills $
+ * @version     $Id: ceon_uri_mapping_config.php 2018-12-23 08:31:10Z webchills $
  */
 
 define('HEADING_TITLE', 'Ceon URI Mapping (SEO) Config');
@@ -55,7 +55,7 @@ define('TEXT_MAPPING_CLASH_ACTION_AUTO_APPEND', 'Auto-append a Number - A unique
 
 define('TEXT_AUTO_MANAGED_PRODUCT_URIS', 'Auto-managed Product Page URIs');
 define('TEXT_LABEL_AUTO_MANAGED_PRODUCT_URIS', 'Automatically Managed URIs for Pages Related to a Product:');
-define('TEXT_CONFIG_DESC_AUTO_MANAGED_PRODUCT_URIS', '<p>When adding/updating a URI mapping for a product, mappings can also be automatically added/updated for pages related to the product page.</p> <p>For any page type enabled below, whenever a product URI is added/updated, the respective &ldquo;URI part&rdquo;, for the appropriate language, will be appended to the product\'s URI and saved as the URI mapping for that page.</p> <p>For example, if a new product is added with a URI mapping of &ldquo;<code>/books/life-is-good</code>&rdquo;, and auto-adding is enabled for the &ldquo;tell a friend&rdquo; page, with a URI part of &ldquo;<code>tell-a-friend</code>&rdquo;, a new URI mapping of &ldquo;<code>/books/life-is-good/tell-a-friend</code>&rdquo; will be added for that product\'s tell a friend page.</p> <p>Whenever a product\'s URI is changed, the page types enabled below will also have their URIs updated accordingly.</p>');
+define('TEXT_CONFIG_DESC_AUTO_MANAGED_PRODUCT_URIS', '<p>When adding/updating a URI mapping for a product, mappings can also be automatically added/updated for pages related to the product page.</p> <p>For any page type enabled below, whenever a product URI is added/updated, the respective &ldquo;URI part&rdquo;, for the appropriate language, will be appended to the product\'s URI and saved as the URI mapping for that page.</p> <p>Whenever a product\'s URI is changed, the page types enabled below will also have their URIs updated accordingly.</p>');
 define('TEXT_INSTRUCTIONS_AUTO_MANAGED_PRODUCT_URIS', 'Tick the page types which should have their URIs auto-managed...');
 define('TEXT_LABEL_AUTO_MANAGED_URI_REVIEWS', 'Products\' Reviews Pages');
 define('TEXT_LABEL_AUTO_MANAGED_URI_REVIEW_INFO', 'Products\' Review Info Pages');

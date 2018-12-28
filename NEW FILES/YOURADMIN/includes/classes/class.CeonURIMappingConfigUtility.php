@@ -6,11 +6,11 @@
  * @package     ceon_uri_mapping
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: class.CeonURIMappingConfigUtility.php 2018-04-06 16:45:15Z webchills $
+ * @version     $Id: class.CeonURIMappingConfigUtility.php 2018-12-24 09:45:15Z webchills $
  */
 
 /**
@@ -28,7 +28,7 @@ require_once(DIR_WS_CLASSES . 'class.CeonURIMappingVersion.php');
  * @package     ceon_uri_mapping
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -455,21 +455,6 @@ class CeonURIMappingConfigUtility extends CeonURIMappingVersion
 				$this->_error_messages['product-reviews-write-pages-uri-parts-' . $language_code] =
 					TEXT_ERROR_URI_PART_MUST_BE_ENTERED;
 			}
-			
-			
-			$uri_part = trim(preg_replace('|[^a-zA-Z0-9\.\-_\/ ]|', '',
-				$_POST['tell-a-friend-pages-uri-parts'][$language_code]));
-			
-			// Remove any slashes at the start of the URI part
-			while (substr($uri_part, 0, 1) == '/') {
-				$uri_part = substr($uri_part, 1, strlen($uri_part) -1);
-			}
-			
-			// Remove any trailing slashes
-			while (substr($uri_part, -1) == '/') {
-				$uri_part = substr($uri_part, 0, strlen($uri_part) -1);
-			}		
-		
 			
 			
 		}

@@ -11,7 +11,7 @@
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: class.CeonURIMappingAdminProductPages.php 2018-12-23 10:45:15Z webchills $
+ * @version     $Id: class.CeonURIMappingAdminProductPages.php 2018-12-28 09:45:15Z webchills $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -718,7 +718,7 @@ class CeonURIMappingAdminProductPages extends CeonURIMappingAdminProducts
 					$messageStack->add_session($failure_message, 'error');
 				}
 				
-				// Now add the URI mappings for the review pages/tell-a-friend page for this product
+				// Now add the URI mappings for the review pages for this product
 				$base_uri = $uri . '/';
 				
 				// Get the language code for the mapping's language
@@ -1241,7 +1241,7 @@ class CeonURIMappingAdminProductPages extends CeonURIMappingAdminProducts
 						$messageStack->add_session($failure_message, 'error');
 					}
 					
-					// Now add the URI mappings for the review pages/tell-a-friend page for this product
+					// Now add the URI mappings for the review pages for this product
 					$base_uri = $uri . '/';
 					
 					// Get the language code for the mapping's language
@@ -1671,7 +1671,7 @@ class CeonURIMappingAdminProductPages extends CeonURIMappingAdminProducts
 						$messageStack->add_session($failure_message, 'error');
 					}
 					
-					// Now add the URI mappings for the review pages/tell-a-friend page for this product
+					// Now add the URI mappings for the review pages for this product
 					$base_uri = $uri . '/';
 					
 					// Get the language code for the mapping's language

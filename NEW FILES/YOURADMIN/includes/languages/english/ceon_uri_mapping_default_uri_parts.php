@@ -6,16 +6,16 @@
  * @package     ceon_uri_mapping
  * @author      Conor Kerr <zen-cart.uri-mapping@ceon.net>
  * @copyright   Copyright 2008-2012 Ceon
- * @copyright   Copyright 2003-2018 Zen Cart Development Team
+ * @copyright   Copyright 2003-2019 Zen Cart Development Team
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: ceon_uri_mapping_default_uri_parts.php 2018-03-29 08:31:10Z webchills $
+ * @version     $Id: ceon_uri_mapping_default_uri_parts.php 2018-12-24 08:31:10Z webchills $
  */
 
 /**
  * The language defines for the default URI part text to be used for the product related pages' URI
- * parts (the product reviews/tell-a-friend pages).
+ * parts (the product reviews pages).
  *
  * These defines are only used when installing or updating the module, as fallbacks, if the store
  * hasn't already specified custom URI part text for a language the store uses.

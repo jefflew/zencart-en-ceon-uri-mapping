@@ -10,7 +10,7 @@
  * @copyright   Portions Copyright 2003 osCommerce
  * @link        http://ceon.net/software/business/zen-cart/uri-mapping
  * @license     http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version     $Id: class.CeonURIMappingInstallationCheck.php 2018-12-21 08:45:15Z webchills $
+ * @version     $Id: class.CeonURIMappingInstallationCheck.php 2018-12-27 11:30:15Z webchills $
  */
 
 /**
