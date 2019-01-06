@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: update_product.php for CEON URI Mapping 2018-12-20 11:34:16Z webchills $
+ * @version $Id: update_product.php for CEON URI Mapping 2019-01-06 09:34:16Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -87,7 +87,7 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
     ///////////////////////////////////////////////////////
   } elseif ($action == 'update_product') {
     $sql_data_array['products_last_modified'] = 'now()';
-    $sql_data_array['master_categories_id'] = ((int)$_POST['master_category'] > 0 ? (int)$_POST['master_category'] : (int)$_POST['master_categories_id']);
+    $sql_data_array['master_categories_id'] = (!empty($_POST['master_category']) && (int)$_POST['master_category'] > 0 ? (int)$_POST['master_category'] : (int)$_POST['master_categories_id']);
 
     zen_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = " . (int)$products_id);
 

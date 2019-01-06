@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: general.php for CEON URI Mapping 2018-12-20 08:03:33Z webchills $
+ * @version $Id: general.php for CEON URI Mapping 2019-01-06 09:03:33Z webchills $
  */
 
 ////
@@ -2575,7 +2575,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
       if ($check_valid == true) {
         $valid_downloads = '';
         while (!$download_display->EOF) {
-          if (!file_exists(zen_get_download_handler($download_display->fields['products_attributes_filename']))) {
+          if (!zen_orders_products_downloads($download_display->fields['products_attributes_filename'])) {
             $valid_downloads .= '<br />&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . ' Invalid: ' . $download_display->fields['products_attributes_filename'];
             // break;
           } else {

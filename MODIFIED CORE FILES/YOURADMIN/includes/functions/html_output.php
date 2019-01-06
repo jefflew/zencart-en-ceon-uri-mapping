@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php for CEON URI Mapping 2018-12-20 08:07:42Z webchills $
+ * @version $Id: html_output.php for CEON URI Mapping 2019-01-06 09:07:42Z webchills $
  */
 
 ////
@@ -63,6 +63,7 @@
     $link = null;
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters, $connection);
     if($link !== null) return $link;
+
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
@@ -189,17 +190,9 @@
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
-      if ($usessl) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      }
+      $form .= zen_href_link($action, $parameters, 'NONSSL');
     } else {
-      if ($usessl) {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      }
+      $form .= zen_href_link($action, '', 'NONSSL');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (zen_not_null($params)) {

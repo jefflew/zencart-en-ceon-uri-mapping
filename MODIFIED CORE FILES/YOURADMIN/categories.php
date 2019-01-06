@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: categories.php for CEON URI Mapping 2018-12-27 11:15:51Z webchills $
+ * @version $Id: categories.php for CEON URI Mapping 2019-01-06 09:15:51Z webchills $
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();
@@ -16,7 +16,6 @@ $parameters = array(
 );
 $cInfo = new objectInfo($parameters);
 $categoryId = (isset($_GET['cID']) ? $_GET['cID'] : '');
-
 if ($categoryId != '') {
   $category = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
                                    c.sort_order, c.date_added, c.last_modified
@@ -57,7 +56,6 @@ if (zen_not_null($action)) {
       break;
     case 'insert_category':
     case 'update_category':
-    
       if (isset($_POST['add_type']) || isset($_POST['add_type_all'])) {
         // check if it is already restricted
         $sql = "select *
@@ -86,7 +84,6 @@ if (zen_not_null($action)) {
           zen_restrict_sub_categories($_POST['categories_id'], $_POST['restrict_type']);
         }
         $action = "edit";
-
         zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $cPath . '&cID=' . zen_db_prepare_input($_POST['categories_id'])));
       }
       if (isset($_POST['categories_id'])) {
@@ -97,7 +94,6 @@ if (zen_not_null($action)) {
       $sql_data_array = array('sort_order' => (int)$sort_order);
 
       if ($action == 'insert_category') {
-      	 
         $insert_sql_data = array(
           'parent_id' => (int)$current_category_id,
           'date_added' => 'now()');
@@ -190,6 +186,7 @@ if (zen_not_null($action)) {
       }
       
       // BEGIN CEON URI MAPPING 1 of 3
+     
       require_once(DIR_WS_CLASSES . 'class.CeonURIMappingAdminCategoryPages.php');
       
       $ceon_uri_mapping_admin = new CeonURIMappingAdminCategoryPages();
@@ -284,7 +281,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       }
     </script>
     <?php if ($action != 'edit_category_meta_tags') { // bof: categories meta tags  ?>
-    
       <?php if ($editor_handler != '') include ($editor_handler); ?>
     <?php } // meta tags disable editor eof: categories meta tags ?>
   </head>
@@ -312,7 +308,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     }
     switch ($action) {
       case 'new_category':
-    
         $formAction = 'insert_category';
         break;
       case 'edit_category':
@@ -330,7 +325,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         echo zen_draw_form('categories', FILENAME_CATEGORIES, 'action=' . $formAction . '&cPath=' . $cPath . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
         echo zen_draw_hidden_field('categories_id', $cInfo->categories_id);
         ?>
+     
         <?php if ($formAction == 'update_category') { ?>
+	
+       
           <div class="form-group">
             <div class="col-sm-12"><?php echo TEXT_EDIT_INTRO; ?></div>
           </div>
@@ -345,7 +343,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <span class="input-group-addon">
                     <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
                 </span>
-                <?php echo zen_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_name($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name') . 'class="form-control"'); ?>
+                <?php echo zen_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_name($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name') . ' class="form-control"'); ?>
               </div>
               <br>
               <?php
@@ -417,6 +415,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <?php
         if ($action == 'new_category') {
           ?>
+	  
 	        <div class="form-group">
             <?php echo '<label for="uri_mapping" class="col-sm-3 control-label">URI Mapping</label>'; ?>
           <div class="col-sm-9 col-md-6">
@@ -428,6 +427,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     $ceon_uri_mapping_admin = new CeonURIMappingAdminCategoryPages();
     
     $ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();
+    
+    echo $uri_mapping_input_fields_add;
     
     // END CEON URI MAPPING 2 of 3 ?>
           </div>
@@ -450,6 +451,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           <div class="form-group">
             <?php echo '<label for="uri_mapping" class="col-sm-3 control-label">URI Mapping</label>'; ?>
           <div class="col-sm-9 col-md-6">
+
           <?php  // BEGIN CEON URI MAPPING 3 of 3
           
     require_once(DIR_WS_CLASSES . 'class.CeonURIMappingAdminCategoryPages.php');
@@ -458,6 +460,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     
     $ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray(
       (int) $cInfo->categories_id);
+      
+     echo $uri_mapping_input_fields_edit;
     
     // END CEON URI MAPPING 3 of 3 ?>
           </div>
@@ -529,7 +533,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <span class="input-group-addon">
                     <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_title']); ?>
                 </span>
-                <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_metatags_title($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_METATAGS_CATEGORIES_DESCRIPTION, 'metatags_title') . 'class="form-control"');
+                <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_metatags_title($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_METATAGS_CATEGORIES_DESCRIPTION, 'metatags_title') . ' class="form-control"');
                 ?>
               </div>
               <br>

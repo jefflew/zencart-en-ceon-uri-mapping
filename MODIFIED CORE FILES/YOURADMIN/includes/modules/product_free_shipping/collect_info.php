@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: collect_info.php for CEON URI Mapping 2018-12-23 09:26:50Z webchills $
+ * @version $Id: collect_info.php for CEON URI Mapping 2019-01-06 09:26:50Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -131,42 +131,42 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
 }
 ?>
 
-function doRound(x, places) {
-  return Math.round(x * Math.pow(10, places)) / Math.pow(10, places);
-}
-
-function getTaxRate() {
-  var selected_value = document.forms["new_product"].products_tax_class_id.selectedIndex;
-  var parameterVal = document.forms["new_product"].products_tax_class_id[selected_value].value;
-
-  if ( (parameterVal > 0) && (tax_rates[parameterVal] > 0) ) {
-    return tax_rates[parameterVal];
-  } else {
-    return 0;
-  }
-}
-
-function updateGross() {
-  var taxRate = getTaxRate();
-  var grossValue = document.forms["new_product"].products_price.value;
-
-  if (taxRate > 0) {
-    grossValue = grossValue * ((taxRate / 100) + 1);
+  function doRound(x, places) {
+      return Math.round(x * Math.pow(10, places)) / Math.pow(10, places);
   }
 
-  document.forms["new_product"].products_price_gross.value = doRound(grossValue, 4);
-}
+  function getTaxRate() {
+      var selected_value = document.forms["new_product"].products_tax_class_id.selectedIndex;
+      var parameterVal = document.forms["new_product"].products_tax_class_id[selected_value].value;
 
-function updateNet() {
-  var taxRate = getTaxRate();
-  var netValue = document.forms["new_product"].products_price_gross.value;
-
-  if (taxRate > 0) {
-    netValue = netValue / ((taxRate / 100) + 1);
+      if ((parameterVal > 0) && (tax_rates[parameterVal] > 0)) {
+          return tax_rates[parameterVal];
+      } else {
+          return 0;
+      }
   }
 
-  document.forms["new_product"].products_price.value = doRound(netValue, 4);
-}
+  function updateGross() {
+      var taxRate = getTaxRate();
+      var grossValue = document.forms["new_product"].products_price.value;
+
+      if (taxRate > 0) {
+          grossValue = grossValue * ((taxRate / 100) + 1);
+      }
+
+      document.forms["new_product"].products_price_gross.value = doRound(grossValue, 4);
+  }
+
+  function updateNet() {
+      var taxRate = getTaxRate();
+      var netValue = document.forms["new_product"].products_price_gross.value;
+
+      if (taxRate > 0) {
+          netValue = netValue / ((taxRate / 100) + 1);
+      }
+
+      document.forms["new_product"].products_price.value = doRound(netValue, 4);
+  }
 </script>
 <div class="container-fluid">
     <?php
@@ -452,7 +452,7 @@ function updateNet() {
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . 'class="form-control"'); ?>
+          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control"'); ?>
         </div>
         <br>
         <?php

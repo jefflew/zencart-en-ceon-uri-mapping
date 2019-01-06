@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_sessions.php for CEON URI Mapping 2018-03-29 08:30:12Z webchills $
+ * @version $Id: init_sessions.php for CEON URI Mapping 2019-01-06 09:30:12Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -73,7 +73,10 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     $session_started = true;
   }
 } elseif (SESSION_BLOCK_SPIDERS == 'True') {
-  $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+  $user_agent = '';
+  if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+  }
   $spider_flag = false;
   if (zen_not_null($user_agent)) {
     $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
