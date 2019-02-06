@@ -425,8 +425,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     require_once(DIR_WS_CLASSES . 'class.CeonURIMappingAdminCategoryPages.php');
     
     $ceon_uri_mapping_admin = new CeonURIMappingAdminCategoryPages();
-    
-    $ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();
+
+    $uri_mapping_input_fields_add = $ceon_uri_mapping_admin->addURIMappingFieldsToAddCategoryFieldsArray();
     
     echo $uri_mapping_input_fields_add;
     
@@ -458,8 +458,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     
     $ceon_uri_mapping_admin = new CeonURIMappingAdminCategoryPages();
     
-    $ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray(
-      (int) $cInfo->categories_id);
+    $uri_mapping_input_fields_edit = $ceon_uri_mapping_admin->addURIMappingFieldsToEditCategoryFieldsArray((int) $cInfo->categories_id);
       
      echo $uri_mapping_input_fields_edit;
     

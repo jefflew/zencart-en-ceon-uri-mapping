@@ -164,7 +164,7 @@ class CeonURIMappingAdminCategoryPages extends CeonURIMappingAdminCategories
 						$failure_message = sprintf(CEON_URI_MAPPING_TEXT_ERROR_ADD_MAPPING_DB,
 							ucwords($languages[$i]['name']), $uri);
 					}
-					
+
 					$messageStack->add_session($failure_message, 'error');
 				}
 			} else if ($prev_uri_mapping != '' && $uri_mapping == '') {
@@ -193,14 +193,12 @@ class CeonURIMappingAdminCategoryPages extends CeonURIMappingAdminCategories
 	 */
 	public function addURIMappingFieldsToAddCategoryFieldsArray()
 	{
-		global $contents;
-		
 		// New category doesn't have any previous URI mappings
 		$prev_uri_mappings = array();
 		
 		$uri_mapping_input_fields = $this->buildCategoryURIMappingFields($prev_uri_mappings);
-		
-		$contents[] = array('text' => $uri_mapping_input_fields);
+
+		return $uri_mapping_input_fields;
 	}
 	
 	// }}}
@@ -218,8 +216,6 @@ class CeonURIMappingAdminCategoryPages extends CeonURIMappingAdminCategories
 	 */
 	public function addURIMappingFieldsToEditCategoryFieldsArray($category_id)
 	{
-		global $contents;
-		
 		// Get any current category mappings from the database, up to one for each language
 		$prev_uri_mappings = array();
 		
@@ -245,7 +241,7 @@ class CeonURIMappingAdminCategoryPages extends CeonURIMappingAdminCategories
 		
 		$uri_mapping_input_fields = $this->buildCategoryURIMappingFields($prev_uri_mappings);
 		
-		$contents[] = array('text' => $uri_mapping_input_fields);
+		return $uri_mapping_input_fields;
 	}
 	
 	// }}}
